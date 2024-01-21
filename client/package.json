@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --open",
+    "dev": "vite --port 3200 --open",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
@@ -41,6 +41,7 @@
     "@tiptap/pm": "^2.1.12",
     "@tiptap/react": "^2.1.12",
     "@tiptap/starter-kit": "^2.1.12",
+    "@types/react-router-hash-link": "^2.4.9",
     "axios": "^1.5.1",
     "cmdk": "^0.2.0",
     "crypto-js": "^4.1.1",
@@ -56,7 +57,9 @@
     "react-easy-crop": "^5.0.2",
     "react-hook-form": "^7.47.0",
     "react-hot-toast": "^2.4.1",
+    "react-icons": "^5.0.1",
     "react-router-dom": "^6.17.0",
+    "react-router-hash-link": "^2.4.3",
     "uuid": "^9.0.1",
     "zod": "^3.22.4",
     "zustand": "^4.4.4"

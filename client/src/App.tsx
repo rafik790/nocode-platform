@@ -6,13 +6,25 @@ import Error from './pages/Error';
 import MyForms from './pages/MyForms';
 import UpdateForm from './pages/UpdateForm';
 import GeneratedForm from './pages/GeneratedForm';
+import Home from './pages/public/Home';
+import Login from './pages/public/Login';
 
 const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Home />,
+    errorElement: <Error />,
+  },
+  {
+    path: '/login',
+    element: <Login />,
+    errorElement: <Error />,
+  },
   {
     element: <BaseLayout />,
     children: [
       {
-        path: '/',
+        path: '/create-form',
         element: <CreateForm />,
       },
       {

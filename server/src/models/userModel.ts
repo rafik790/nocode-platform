@@ -1,7 +1,10 @@
 import { type Query, Schema, model } from 'mongoose';
+import jwt from 'jsonwebtoken';
 
-interface IUser {
-  name: string;
+export interface IUser {
+  userID: string;
+  firstName: string;
+  lastName: string;
   email: string;
   avatar: string | null;
   password: string;
@@ -13,9 +16,18 @@ interface IUser {
   deletedAt: Date | null;
 }
 
-const userSchema = new Schema<IUser>(
+const userSchema = new Schema<IUserDocument>(
   {
-    name: {
+    userID: {
+      type: String,
+      required: true,
+      unique: true
+    },
+    firstName: {
+      type: String,
+      required: true,
+    },
+    lastName: {
       type: String,
       required: true,
     },
@@ -32,8 +44,7 @@ const userSchema = new Schema<IUser>(
     password: {
       type: String,
       required: true,
-      minLength: 8,
-      select: false,
+      minLength: 8
     },
     passwordChangedAt: Date,
     refreshToken: [String],
@@ -53,9 +64,33 @@ const userSchema = new Schema<IUser>(
   { timestamps: true },
 );
 
+export interface IUserDocument extends IUser, Document {
+  generateJWTAcessToken(clientID: string): string;
+}
+
 userSchema.pre(/^find/, function (this: Query<IUser | IUser[], IUser>, next) {
   this.where({ isDeleted: false });
   next();
 });
 
-export default model<IUser>('User', userSchema);
+
+userSchema.methods.generateJWTAcessToken = function (this: IUser, clientID: string) {
+  const expiresInMunites = 60;
+  let payload = {
+    clientID: clientID,
+    userID: this.userID,
+    email: this.email,
+    firstName: this.firstName,
+    lastName: this.lastName,
+    expireMinutes: expiresInMunites,
+    issuer: 'mindstar'
+  };
+
+  let secreteKey = process.env.JWT_ACCESS_TOKEN_KEY as string;
+  let token = jwt.sign(payload, secreteKey, {
+    expiresIn: expiresInMunites + "m"
+  });
+  return token;
+};
+
+export default model<IUserDocument>('User', userSchema);

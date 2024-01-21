@@ -1,4 +1,6 @@
-import { Router } from 'express';
+import express from 'express';
+export const formRouter = express.Router({ mergeParams: true });
+
 import {
   createForm,
   deleteForm,
@@ -13,21 +15,19 @@ import {
   getAllResponses,
 } from '../controllers/formResponseController';
 
-const router = Router();
-
-router.route('/')
+formRouter.route('/')
   .get(getAllForms)
   .post(createForm);
 
-router.patch('/bulk-delete', deleteForms);
+formRouter.patch('/bulk-delete', deleteForms);
 
-router.route('/:id')
+formRouter.route('/:id')
   .get(getForm)
   .patch(updateForm)
   .delete(deleteForm);
 
-router.route('/:id/responses')
+formRouter.route('/:id/responses')
   .get(getAllResponses)
   .post(createResponse);
 
-export default router;
+export default formRouter;

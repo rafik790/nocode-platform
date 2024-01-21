@@ -6,7 +6,10 @@ import mongoSanitize from 'express-mongo-sanitize';
 import hpp from 'hpp';
 
 
-import formRouter from './routes/formRoutes';
+import {formRouter} from './routes/formRoutes';
+import { userRouter } from './routes/userRoutes';
+import * as StartUp from './services/startup.service'
+
 import AppError from './utils/appError';
 import { globalErrorHandler } from './controllers/errorController';
 //import verifyJWT from './middleware/verifyJWT';
@@ -41,6 +44,12 @@ app.get('/', (req, res) => {
   res.json({'message': 'ok'});
 });
 
+app.get('/start-up', async(req, res) => {
+  await StartUp.createAdminUser();
+  res.json({'message': 'ok'});
+});
+
+app.use('/api/v1/users', userRouter);
 app.use('/api/v1/forms', formRouter);
 
 

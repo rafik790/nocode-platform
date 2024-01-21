@@ -84,6 +84,7 @@ export default function GeneratedForm() {
   const form = useForm();
 
   useEffect(() => {
+    
     if (!data) return;
     const defaultValues: { [x: string]: unknown } = {};
     data.elements.forEach(({ id, type }) => {

@@ -25,8 +25,7 @@ const AuthContext = createContext<AuthContextType>({
   setPersist: () => {},
 });
 
-export default function AuthProvider({
-  children,
+export default function AuthProvider({children,
 }: {
   children: React.ReactNode;
 }) {

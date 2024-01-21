@@ -4,7 +4,7 @@ import { Link, Outlet, NavLink } from 'react-router-dom';
 const navItems = [
   {
     label: 'Create Form',
-    href: '/',
+    href: '/create-form',
   },
   {
     label: 'My Forms',

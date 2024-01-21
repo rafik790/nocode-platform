@@ -1,3 +1,6 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,6 +9,35 @@
   * {
     @apply border-border;
   }
+}
+
+
+body {
+  margin: 0;
+  font-family: 'Lato', sans-serif;
+}
+
+.hero {
+  background: url(../assets/images/hero-bg.jpg) top center no-repeat;
+  background-size: cover;
+}
+
+
+.SideMenuAndPageContent{
+  display: flex;
+  flex: 1;
+  justify-content: flex-start;
+  align-items: flex-start;
+  background-color:white ;
+}
+.SideMenu{
+  height: 100%;
+}
+.SideMenuVertical{
+  height: 100%;
+}
+.PageContent{
+  padding-left: 12px;
 }
 
 /* To show placeholder in tiptap editor */
@@ -17,3 +49,5 @@
 .rdp-vhidden {
   @apply hidden;
 }
+
+

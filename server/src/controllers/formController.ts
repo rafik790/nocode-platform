@@ -4,6 +4,7 @@ import Form from '../models/formModel';
 import AppError from '../utils/appError';
 
 export const getAllForms = catchAsyncError(
+
   async (req: Request, res: Response, next: NextFunction) => {
     const page = Number(req.query.page) || 0;
     const pageSize = Number(req.query.pageSize) || 10;
@@ -32,6 +33,7 @@ export const getAllForms = catchAsyncError(
       },
     });
   },
+  
 );
 
 export const deleteForms = catchAsyncError(

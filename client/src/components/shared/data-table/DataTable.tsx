@@ -158,6 +158,7 @@ export function DataTable<TData extends { _id: string }, TValue>({
           <DataTableViewOptions table={table} />
         </div>
       </div>
+      
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -188,12 +189,12 @@ export function DataTable<TData extends { _id: string }, TValue>({
                   onClick={() => clickHandler(row.original._id)}
                 >
                   {row.getVisibleCells().map(cell => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
+                   <TableCell key={cell.id}>
+                   {flexRender(
+                     cell.column.columnDef.cell,
+                     cell.getContext(),
+                   )}
+                 </TableCell>
                   ))}
                 </TableRow>
               ))

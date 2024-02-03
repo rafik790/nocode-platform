@@ -40,6 +40,7 @@ export default function MyForms() {
     sort: searchParams.get('sort') || '-createdAt',
     search: searchParams.get('query'),
   };
+  
   const { data, isPending, isError, isFetching } = useQuery<FormsResponseType>({
     queryKey: ['forms', params],
     queryFn: () =>

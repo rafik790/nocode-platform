@@ -20,22 +20,27 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>({
   auth: initialAuthState,
-  setAuth: () => {},
+  setAuth: () => { },
   persist: true,
-  setPersist: () => {},
+  setPersist: () => { },
 });
+export const useAuth = () => {
+  return useContext(AuthContext);
+}
 
-export default function AuthProvider({children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AuthProvider({ children, }: { children: React.ReactNode; }) {
+
   const [cookies] = useCookies(['userDetails']);
+
   const currentState = cookies.userDetails
     ? { accessToken: '', ...getDecryptedData(cookies.userDetails) }
     : initialAuthState;
-  const [auth, setAuth] = useState(currentState);
 
+  console.log("currentState::", currentState);
+
+  const [auth, setAuth] = useState(currentState);
   const initialPersist = localStorage.getItem('persist');
+
   const [persist, setPersist] = useState<boolean>(
     initialPersist ? JSON.parse(initialPersist) : true,
   );
@@ -47,4 +52,4 @@ export default function AuthProvider({children,
   );
 }
 
-export const useAuth = () => useContext(AuthContext);
+

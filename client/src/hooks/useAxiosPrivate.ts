@@ -6,8 +6,12 @@ import { axiosPrivate } from '../lib/axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function useAxiosPrivate() {
+
   const refresh = useRefreshToken();
-  const { auth, setAuth } = useAuth();
+  const { auth, setAuth, persist, setPersist } = useAuth();
+  console.log("auth::", auth);
+  console.log("persist::", persist);
+
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
@@ -53,6 +57,7 @@ export default function useAxiosPrivate() {
       axiosPrivate.interceptors.request.eject(requestIntercept);
       axiosPrivate.interceptors.response.eject(responseIntercept);
     };
+
   }, [auth, refresh, navigate, pathname, setAuth]);
 
   return axiosPrivate;

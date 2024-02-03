@@ -28,7 +28,11 @@ export const login = async (req: Request, res: Response) => {
         status: 'success',
         message: 'success',
         data: {
-            access_token: accessToken
+            accessToken: accessToken,
+            id: userDoc.userID,
+            name: userDoc.firstName+" "+userDoc.lastName,
+            email: userDoc.email,
+            avatar: userDoc.avatar
         },
     });
 }

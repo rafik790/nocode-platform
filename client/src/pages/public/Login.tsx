@@ -5,7 +5,7 @@ import Hero2 from '../../assets/images/no-code_1.png';
 import NavBar from '../../components/navbar/NavBar';
 import '../../styles/login.css';
 import axios from '../../lib/axios';
-import { useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import {
   useMutation,
@@ -13,24 +13,33 @@ import {
 import toast from 'react-hot-toast';
 import { AxiosError } from 'axios';
 
+import { useCookies } from 'react-cookie';
+import { getEncryptedData } from '@/utils';
+
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
   const navigate = useNavigate();
+  const [cookies, setCookie] = useCookies(['userDetails']);
 
   const mutation = useMutation({
-    mutationFn: (loginForm: { email: string; password: string }) =>{
+    mutationFn: (loginForm: { email: string; password: string }) => {
       return axios.post('/users/login', loginForm)
     },
-    onSuccess: (response:any) => {
-      console.log("response::",response);
+    onSuccess: (response: any) => {
       setUsername('');
       setPassword('');
+      const userData = getEncryptedData(response.data.data);
+      console.log("Encrypted Data::", userData);
+
+      setCookie('userDetails', userData);
+
       toast.success('Login successfully');
-      navigate('/my-forms')
+      navigate('/my-forms', { replace: true });
     },
-    onError: (error:AxiosError) => {
-      console.log("failed::",error);
+    onError: (error: AxiosError) => {
+      console.log("failed::", error);
       toast.error('Error updating form')
     },
   });
@@ -38,7 +47,7 @@ const Login = () => {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-    mutation.mutate({email: username,  password: password });
+    mutation.mutate({ email: username, password: password });
   };
 
   return (

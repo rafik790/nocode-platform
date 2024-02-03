@@ -10,7 +10,7 @@ export default function AuthLayout() {
         <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center justify-between px-6">
           <Link to="/">
             <h1 className="font-cursive text-3xl font-bold text-primary">
-             LOW CODE
+              LOW CODE
             </h1>
           </Link>
           <div className="flex gap-6">
@@ -31,9 +31,8 @@ export default function AuthLayout() {
         </div>
       </header>
       <main
-        className={`mx-auto mt-16 w-full max-w-[1440px] flex-grow px-6 py-5 ${
-          pathname === '/demo' ? '' : 'flex'
-        }`}
+        className={`mx-auto mt-16 w-full max-w-[1440px] flex-grow px-6 py-5 ${pathname === '/demo' ? '' : 'flex'
+          }`}
       >
         {pathname === '/demo' ? (
           <Outlet />

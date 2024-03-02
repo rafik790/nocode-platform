@@ -9,20 +9,17 @@ export default function useAxiosPrivate() {
 
   const refresh = useRefreshToken();
   const { auth, setAuth, persist, setPersist } = useAuth();
-  console.log("auth::", auth);
-  console.log("persist::", persist);
-
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
   useEffect(() => {
+    
     const requestIntercept = axiosPrivate.interceptors.request.use(
       config => {
-        if (!config.headers.Authorization)
-          config.headers.Authorization = auth.accessToken
-            ? `Bearer ${auth.accessToken}`
-            : undefined;
-
+          console.log("auth::",auth);
+          if(auth.accessToken){
+            config.headers.Authorization = `Bearer ${auth.accessToken}`
+          }
         return config;
       },
       error => Promise.reject(error),

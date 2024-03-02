@@ -8,10 +8,15 @@ import MyForms from './pages/MyForms';
 import UpdateForm from './pages/UpdateForm';
 import { useAuth } from './contexts/AuthContext';
 import GeneratedForm from './pages/GeneratedForm';
+import Landing from './pages/private/Landing';
+import AppLayout from './layouts/AppLayout';
+import AppLanding from './pages/private/AppLanding';
+import ContentModelsView from './pages/private/ContentModels';
+import ContentModelSetting from './pages/private/ContentModelSetting';
 
 const Routes = () => {
     const { auth } = useAuth();
-    console.log("auth::",auth);
+    console.log("auth::", auth);
 
     const accessToken = auth.accessToken;
 
@@ -33,6 +38,10 @@ const Routes = () => {
             element: <BaseLayout />,
             children: [
                 {
+                    path: '/landing',
+                    element: <Landing />,
+                },
+                {
                     path: '/create-form',
                     element: <CreateForm />,
                 },
@@ -51,7 +60,27 @@ const Routes = () => {
             path: 'forms/:id',
             element: <GeneratedForm />,
             errorElement: <Error />,
-          },
+        },
+    ]
+
+    const routesForApplication = [
+        {
+            element: <AppLayout />,
+            children: [
+                {
+                    path: '/app/:appID',
+                    element: <AppLanding />,
+                }, 
+                {
+                    path: '/app/:appID/content-model',
+                    element: <ContentModelsView />,
+                },
+                {
+                    path: '/app/:appID/content-model/:modelID',
+                    element: <ContentModelSetting />,
+                }
+            ],
+        }
     ]
 
     const routesForNotAuthenticatedUser = [
@@ -70,6 +99,7 @@ const Routes = () => {
         ...routesForPublic,
         ...(!accessToken ? routesForNotAuthenticatedUser : []),
         ...routesForAuthenticatedUser,
+        ...routesForApplication,
     ]);
 
     // Provide the router configuration using RouterProvider

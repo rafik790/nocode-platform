@@ -32,15 +32,15 @@ const Login = () => {
       setPassword('');
       const userData = getEncryptedData(response.data.data);
       console.log("Encrypted Data::", userData);
-
       setCookie('userDetails', userData);
 
       toast.success('Login successfully');
-      navigate('/my-forms', { replace: true });
+      navigate('/landing', { replace: true });
     },
     onError: (error: AxiosError) => {
       console.log("failed::", error);
-      toast.error('Error updating form')
+      const resposeData:any = error.response?.data;
+      toast.error(resposeData.message)
     },
   });
 

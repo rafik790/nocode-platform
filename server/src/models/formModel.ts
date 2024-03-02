@@ -5,7 +5,7 @@ interface IForm {
   name: string;
   elements: [];
   isActive: boolean;
-  userID: ObjectId;
+  userID: string;
 }
 
 const formSchema = new Schema<IForm>(
@@ -22,7 +22,7 @@ const formSchema = new Schema<IForm>(
     userID: {
       type: String,
       required: true,
-    },
+    }
   },
   {
     timestamps: true,

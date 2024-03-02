@@ -1,4 +1,5 @@
 import express from 'express';
+import passport from 'passport';
 export const formRouter = express.Router({ mergeParams: true });
 
 import {
@@ -16,18 +17,19 @@ import {
 } from '../controllers/formResponseController';
 
 formRouter.route('/')
-  .get(getAllForms)
-  .post(createForm);
+  .get([passport.authenticate("jwt", { session: false })], getAllForms)
+  .post([passport.authenticate("jwt", { session: false })], createForm);
 
-formRouter.patch('/bulk-delete', deleteForms);
+formRouter.route('/bulk-delete')
+  .patch([passport.authenticate("jwt", { session: false })], deleteForms);
 
 formRouter.route('/:id')
-  .get(getForm)
-  .patch(updateForm)
-  .delete(deleteForm);
+  .get([passport.authenticate("jwt", { session: false })], getForm)
+  .patch([passport.authenticate("jwt", { session: false })], updateForm)
+  .delete([passport.authenticate("jwt", { session: false })], deleteForm);
 
 formRouter.route('/:id/responses')
-  .get(getAllResponses)
+  .get([passport.authenticate("jwt", { session: false })], getAllResponses)
   .post(createResponse);
 
 export default formRouter;

@@ -1,5 +1,5 @@
 import { type ErrorRequestHandler } from 'express';
-import { logEvents } from '../middleware/logger';
+import { logEvents } from '../middleware/logger.middleware';
 
 export const globalErrorHandler: ErrorRequestHandler = (
   err,

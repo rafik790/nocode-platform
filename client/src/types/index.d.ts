@@ -13,3 +13,23 @@ export type FormType = {
   createdAt: string;
   updatedAt: string;
 };
+
+
+export type ContentModelFieldType = {
+  fieldID: string;
+  fieldName: string;
+  fieldType: string;
+};
+
+export type ContentModelType = {
+  _id: string;
+  modelID: string;
+  modelName: string;
+  appID: string;
+  isActive: boolean;
+  userID: string;
+  fields: ContentModelFieldType[];
+  createdAt: string;
+  updatedAt: string;
+};
+

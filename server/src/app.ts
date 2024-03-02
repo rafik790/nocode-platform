@@ -5,17 +5,19 @@ import helmet from 'helmet';
 import mongoSanitize from 'express-mongo-sanitize';
 import hpp from 'hpp';
 
-
 import {formRouter} from './routes/formRoutes';
 import { userRouter } from './routes/userRoutes';
-import * as StartUp from './services/startup.service'
+import {appRouter} from './routes/appRoutes';
 
+import * as StartUp from './services/startup.service'
+import passport from 'passport';
 import AppError from './utils/appError';
 import { globalErrorHandler } from './controllers/errorController';
-//import verifyJWT from './middleware/verifyJWT';
+
 import { allowedOrigins } from './utils/constants';
-import credentials from './middleware/credentials';
-import logger from './middleware/logger';
+import credentials from './middleware/credentials.middleware.';
+import logger from './middleware/logger.middleware';
+import * as auth from './middleware/passport.middleware';
 
 const app: Application = express();
 
@@ -30,6 +32,9 @@ app.use(logger);
 
 app.use(credentials);
 app.use(cors({ origin: allowedOrigins }));
+
+passport.use(auth.strategy);
+app.use(passport.initialize());
 
 app.use(express.static('public'));
 app.use(cookieParser());
@@ -51,9 +56,7 @@ app.get('/start-up', async(req, res) => {
 
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/forms', formRouter);
-
-
-
+app.use('/api/v1/apps', appRouter);
 app.all('*', (req, _res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });

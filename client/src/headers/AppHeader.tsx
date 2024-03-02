@@ -1,22 +1,24 @@
-import { Link, NavLink} from 'react-router-dom';
+import { Link, NavLink, useParams } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import LogoutAlert from './LogoutAlert';
-  
-export default function PriaveHeader() {
-    const [cookies, setCookie,removeCookie] = useCookies(['userDetails']);
+
+export default function AppHeader() {
+    const [cookies, setCookie, removeCookie] = useCookies(['userDetails']);
+    const { appID } = useParams<{ appID: string }>();
     const navItems = [
         {
-            label: 'Create Form',
-            href: '/create-form',
+            label: 'Home',
+            href: '/landing',
         },
         {
-            label: 'My Forms',
-            href: '/my-forms',
+            label: 'Content Model',
+            href: '/app/' + appID + '/content-model',
         },
         {
-            label: 'Settings',
-            href: '/settings'
-        }
+            label: 'Content',
+            href: '/app-content-models',
+        },
+
     ];
 
     return (
@@ -46,7 +48,6 @@ export default function PriaveHeader() {
                         </ul>
                     </nav>
                     <LogoutAlert></LogoutAlert>
-
                 </div>
             </header>
         </>

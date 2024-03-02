@@ -1,5 +1,7 @@
 import { type Query, Schema, model } from 'mongoose';
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+dotenv.config();
 
 export interface IUser {
   userID: string;
@@ -75,7 +77,7 @@ userSchema.pre(/^find/, function (this: Query<IUser | IUser[], IUser>, next) {
 
 
 userSchema.methods.generateJWTAcessToken = function (this: IUser, clientID: string) {
-  const expiresInMunites = 60;
+  const expiresInMunites = 120;
   let payload = {
     clientID: clientID,
     userID: this.userID,

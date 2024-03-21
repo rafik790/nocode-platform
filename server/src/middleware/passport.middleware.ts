@@ -12,7 +12,7 @@ const opts: pjtw.StrategyOptions = {
 
 export const strategy = new pjtw.Strategy(opts, async (req: any, jwt_Payload: any, done: any) => {
     try {
-        const user = await User.findOne({ userID: jwt_Payload.userID }).lean();
+        const user = await User.findOne({ _id: jwt_Payload.userID }).lean();
         if (user) {
             req["clientID"] = jwt_Payload.clientID;
             done(null, user);

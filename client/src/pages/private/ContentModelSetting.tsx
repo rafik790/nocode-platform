@@ -6,7 +6,7 @@ import { ContentModelFieldType, ContentModelType } from "@/types";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { useMemo } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import Error from './../Error';
 
 const ContentModelSetting = () => {
@@ -29,7 +29,15 @@ const ContentModelSetting = () => {
             axiosPrivate({
                 url: '/apps/' + appID + '/models/' + modelID,
                 params
-            }).then(res => res.data.data),
+            }).then((res) => {
+                let data = res.data.data
+
+                let entityColumns = data.fields.filter((field: any) => field.isEntityField === true);
+                if (entityColumns && entityColumns.length > 0) {
+                    data.isEntityFieldAdded = true;
+                }
+                return data;
+            }),
         placeholderData: keepPreviousData,
     });
 
@@ -69,6 +77,13 @@ const ContentModelSetting = () => {
                     <DataTableColumnHeader column={column} title="Required Field" />
                 ),
                 canSort: false,
+            },
+            {
+                accessorKey: 'isEntityField',
+                header: ({ column }) => (
+                    <DataTableColumnHeader column={column} title="Entity Field" />
+                ),
+                canSort: false,
             }
         ],
         [],
@@ -86,6 +101,11 @@ const ContentModelSetting = () => {
                             <li><a href="#" className="block py-2 px-4 hover:bg-gray-700">About</a></li>
                             <li><a href="#" className="block py-2 px-4 hover:bg-gray-700">Services</a></li>
                             <li><a href="#" className="block py-2 px-4 hover:bg-gray-700">Contact</a></li>
+                            <li>
+                                <Link to={"/app/" + appID + "/content-model"} className="block py-2 px-4 hover:bg-gray-700">
+                                    Back
+                                </Link>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -94,7 +114,7 @@ const ContentModelSetting = () => {
                         columns={columns}
                         data={data?.fields}
                         isFetching={isFetching}
-                        modelID={data.modelID}
+                        model={data}
                         clickHandler={fieldID => {
                             console.log("fieldID::", fieldID);
                             //window.open(window.location.origin + '/forms/' + formId, '_blank');

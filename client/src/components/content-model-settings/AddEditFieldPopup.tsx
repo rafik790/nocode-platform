@@ -19,16 +19,18 @@ interface CreateAppProps {
     onClose: (refreshParent: boolean) => void;
     isOpen: boolean,
     appID: string,
-    modelID: string
+    modelID: string,
+    entityFieldAdded: boolean
 };
 
-function AddEditFieldPopup({ children, title, onClose, isOpen, appID, modelID }: CreateAppProps) {
+function AddEditFieldPopup({ children, title, onClose, isOpen, appID, modelID, entityFieldAdded }: CreateAppProps) {
     const [fieldID, setFieldID] = useState('');
     const [fieldName, setFieldName] = useState('');
     const [fieldType, setFieldType] = useState('');
+    const [isEntityField, setEntityField] = useState(false);
     const [isUniqueField, setUniqueField] = useState(false);
     const [isRequiredField, setRequiredField] = useState(false);
-
+    
     const axiosPrivate = useAxiosPrivate();
     const { mutate, isPending } = useMutation({
         mutationFn: () =>
@@ -41,7 +43,8 @@ function AddEditFieldPopup({ children, title, onClose, isOpen, appID, modelID }:
                         fieldName: fieldName,
                         fieldType: fieldType,
                         isUniqueField: isUniqueField,
-                        isRequiredField: isRequiredField
+                        isRequiredField: isRequiredField,
+                        isEntityField: isEntityField
                     }]
                 },
             }),
@@ -53,6 +56,7 @@ function AddEditFieldPopup({ children, title, onClose, isOpen, appID, modelID }:
             setFieldType('');
             setUniqueField(false);
             setRequiredField(false);
+            setEntityField(false);
             toast.success(resposeData.message);
             onClose(true);
         },
@@ -64,6 +68,12 @@ function AddEditFieldPopup({ children, title, onClose, isOpen, appID, modelID }:
 
     });
 
+    const changeFieldHandler = (selecedValue:string) => {
+        setFieldType(selecedValue);
+        if(selecedValue=="ReferenceType"){
+
+        }
+    }
 
     return (
         <>
@@ -109,7 +119,7 @@ function AddEditFieldPopup({ children, title, onClose, isOpen, appID, modelID }:
                                 <label htmlFor="fieldID" className="block text-gray-600 text-sm font-medium mb-2">Field Type</label>
                                 <select value={fieldType}
                                     className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
-                                    onChange={(e) => setFieldType(e.target.value)}
+                                    onChange={(e) => changeFieldHandler(e.target.value)}
                                 >
                                     <option value="">Select an option</option>
                                     <option value="RichText">Rich Text</option>
@@ -119,6 +129,15 @@ function AddEditFieldPopup({ children, title, onClose, isOpen, appID, modelID }:
                                     <option value="DateTime">Date Time</option>
                                     <option value="ReferenceType">Reference Type</option>
                                 </select>
+                            </div>
+                            <div className="mb-4">
+                                <Switch
+                                    className="data-[state=unchecked]:bg-primary"
+                                    checked={isEntityField}
+                                    onCheckedChange={setEntityField}
+                                    disabled={entityFieldAdded}
+                                />
+                                <span>&nbsp;Entity Field</span>
                             </div>
                             <div className="mb-4">
                                 <Switch

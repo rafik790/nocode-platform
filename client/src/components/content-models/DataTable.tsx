@@ -45,7 +45,7 @@ interface DataTableProps<TData, TValue> {
     appID: string;
 }
 
-export function DataTable<TData extends { modelID: string }, TValue>({
+export function DataTable<TData extends { _id: string }, TValue>({
     columns,
     data,
     totalEntries,
@@ -157,7 +157,7 @@ export function DataTable<TData extends { modelID: string }, TValue>({
                                         onClick={() => {
                                             bulkDeleteHandler(
                                                 Object.keys(rowSelection).map(
-                                                    index => data[Number(index)].modelID,
+                                                    index => data[Number(index)]._id,
                                                 ),
                                             );
                                             setRowSelection({});
@@ -217,7 +217,7 @@ export function DataTable<TData extends { modelID: string }, TValue>({
                                     key={row.id}
                                     data-state={row.getIsSelected() && 'selected'}
                                     className={isFetching ? 'opacity-60' : 'cursor-pointer'}
-                                    onClick={() => clickHandler(row.original.modelID)}
+                                    onClick={() => clickHandler(row.original._id)}
                                 >
                                     {row.getVisibleCells().map(cell => (
                                         <TableCell key={cell.id}>

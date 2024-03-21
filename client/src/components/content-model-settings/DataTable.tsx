@@ -5,10 +5,9 @@ import {
     VisibilityState,
     flexRender,
     getCoreRowModel,
-    getPaginationRowModel,
     useReactTable,
 } from '@tanstack/react-table';
-import { PlusSquare, Trash2Icon } from 'lucide-react';
+import { PlusSquare} from 'lucide-react';
 
 import {
     Table,
@@ -28,7 +27,7 @@ interface DataTableProps<TData, TValue> {
     isFetching?: boolean;
     clickHandler?: (id: string) => void;
     appID: string;
-    modelID:string
+    model: any
 }
 
 export function DataTable<TData extends { fieldID: string }, TValue>({
@@ -37,7 +36,7 @@ export function DataTable<TData extends { fieldID: string }, TValue>({
     isFetching = false,
     clickHandler = () => { },
     appID,
-    modelID
+    model
 }: DataTableProps<TData, TValue>) {
 
     const [searchParams, setSearchParams] = useSearchParams();
@@ -50,6 +49,7 @@ export function DataTable<TData extends { fieldID: string }, TValue>({
 
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = useState({});
+    const [isEntityFieldAdded, setEntityFieldAdded] = useState(false);
 
     const pagination = {
         pageIndex: Number(searchParams.get('page')) || 0,
@@ -97,6 +97,7 @@ export function DataTable<TData extends { fieldID: string }, TValue>({
         <div className="space-y-4">
             <div className="mt-2 flex items-center">
                 <div className="flex flex-1 items-center gap-4">
+                    Conent Model: {model.modelName}
                 </div>
                 <div className="flex gap-4">
                     <Button
@@ -108,7 +109,7 @@ export function DataTable<TData extends { fieldID: string }, TValue>({
                         <PlusSquare className="mr-2 h-4 w-4" />
                         Add Field
                     </Button>
-                    <AddEditFieldPopup onClose={closePopup} title="Add Field" isOpen={isPopupOpen} appID={appID} modelID={modelID}>
+                    <AddEditFieldPopup onClose={closePopup} title="Add Field" isOpen={isPopupOpen} appID={appID} modelID={model._id} entityFieldAdded={model.isEntityFieldAdded}>
                         <p></p>
                     </AddEditFieldPopup>
                 </div>

@@ -67,7 +67,6 @@ export const createContentModel = async (loggedUserID: string, appID: string, mo
 
 
     const newModel = await ContentModel.create({
-        modelID: uuidv4(),
         modelName: modelName,
         lowerCaseName: modelName.toLocaleLowerCase(),
         fields: fields ?? [],
@@ -80,7 +79,7 @@ export const createContentModel = async (loggedUserID: string, appID: string, mo
         status: SYS_MESSAGE.SUCCESS.CODE,
         message: "",
         data: {
-            modelID: newModel.modelID
+            modelID: newModel._id
         },
     };
     return responseDto;
@@ -92,7 +91,7 @@ export const addFieldsInContentModel = async (appID: string, modelID: string, el
 
     const modelExist = await ContentModel.findOne({
         appID: appID,
-        modelID: modelID
+        _id: modelID
     }).lean();
 
     if (!modelExist) {
@@ -125,19 +124,39 @@ export const addFieldsInContentModel = async (appID: string, modelID: string, el
 
 
     const fields: Array<any> = [];
+    let isEntityFieldPresent: boolean = false;
     elements.forEach((element: any) => {
         const field = {
             fieldID: element.fieldID,
             fieldName: element.fieldName,
             fieldType: element.fieldType,
             isUniqueField: element.isUniqueField,
-            isRequiredField: element.isRequiredField
+            isRequiredField: element.isRequiredField,
+            isEntityField: element.isEntityField
+        }
+
+        if (element.isEntityField) {
+            isEntityFieldPresent = true;
         }
         fields.push(field)
     });
 
+    if (isEntityFieldPresent) {
+        await ContentModel.updateOne(
+            {
+                _id: modelID,
+                fields: {
+                    $elemMatch: {
+                        isEntityField: { $ne: true }
+                    }
+                }
+            },
+            { $set: { "fields.$.isEntityField": false } }
+        );
+    }
+
     const result = await ContentModel.updateOne(
-        { modelID: modelID },
+        { _id: modelID },
         { $push: { fields: [...fields] } },
         { upsert: false }
     );
@@ -150,8 +169,11 @@ export const addFieldsInContentModel = async (appID: string, modelID: string, el
 }
 
 export const getContentModelDetails = async (appID: string, modelID: string): Promise<any> => {
-    const query = { appID: appID, modelID: modelID }
-    const contentModel = await ContentModel.findOne(query).exec();
+    const query = { appID: appID, _id: modelID }
+    const contentModel = await ContentModel.findOne(query, {
+        __v: 0
+    }).exec();
+    
     const responseDto = {
         status: SYS_MESSAGE.SUCCESS.CODE,
         message: SYS_MESSAGE.SUCCESS.MSG,

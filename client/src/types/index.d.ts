@@ -23,7 +23,6 @@ export type ContentModelFieldType = {
 
 export type ContentModelType = {
   _id: string;
-  modelID: string;
   modelName: string;
   appID: string;
   isActive: boolean;
@@ -31,5 +30,6 @@ export type ContentModelType = {
   fields: ContentModelFieldType[];
   createdAt: string;
   updatedAt: string;
+  isEntityFieldAdded: boolean
 };
 

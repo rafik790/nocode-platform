@@ -4,8 +4,8 @@ import * as contentService from './../services/content.service';
 
 import { SYS_MESSAGE } from "../utils/constants";
 export const createApplication = async (req: any, res: Response) => {
-    const loggedUserID = req.user.userID;
-    const returnDto = await appService.createApplication(req.body, loggedUserID);
+    const loggedUser = req.user;
+    const returnDto = await appService.createApplication(req.body, loggedUser);
     if (returnDto.status != SYS_MESSAGE.SUCCESS.CODE) {
         return res.status(400).json(returnDto);
     } else {
@@ -13,7 +13,7 @@ export const createApplication = async (req: any, res: Response) => {
     }
 }
 export const getMyApplications = async (req: any, res: Response) => {
-    const loggedUserID = req.user.userID;
+    const loggedUserID = req.user._id;
     const returnDto = await appService.getApplications(loggedUserID);
     if (returnDto.status != SYS_MESSAGE.SUCCESS.CODE) {
         return res.status(400).json(returnDto);
@@ -41,7 +41,7 @@ export const getContentModels = async (req: any, res: Response) => {
 
 export const createContentModel = async (req: any, res: Response) => {
     const appID = req.params.appID;
-    const loggedUserID = req.user.userID;
+    const loggedUserID = req.user._id;
     const { modelName, fields } = req.body;
 
     const returnDto = await contentService.createContentModel(loggedUserID, appID, modelName, fields);
@@ -56,7 +56,7 @@ export const addFieldsInContentModel = async (req: any, res: Response) => {
     const appID = req.params.appID;
     const modelID = req.params.modelID;
 
-    const loggedUserID = req.user.userID;
+    const loggedUserID = req.user._id;
     const { fields } = req.body;
 
     const returnDto = await contentService.addFieldsInContentModel(appID, modelID, fields);

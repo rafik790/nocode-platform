@@ -1,10 +1,9 @@
-import { type Query, Schema, model } from 'mongoose';
+import { type Query, Schema, model, Types } from 'mongoose';
 export interface IApp {
-    appID: string;
     appName: string;
     appDesc: string;
     appDomain: string;
-    userID: string;
+    userID: Types.ObjectId;
     isDeleted: boolean;
     deletedAt: Date | null;
 }
@@ -13,11 +12,6 @@ export interface IAppDocument extends IApp, Document {
 
 const appSchema = new Schema<IAppDocument>(
     {
-        appID: {
-            type: String,
-            required: true,
-            unique: true
-        },
         appName: {
             type: String,
             required: true,
@@ -31,7 +25,8 @@ const appSchema = new Schema<IAppDocument>(
             required: true,
         },
         userID: {
-            type: String,
+            type: Schema.Types.ObjectId,
+            ref: 'User',
             required: true
         },
         isDeleted: {

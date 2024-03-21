@@ -20,7 +20,7 @@ export const login = async (req: Request, res: Response) => {
             message: 'Credential is not valid.'
         });
     }
-
+ 
     const clientID = uuidv4();
     const accessToken = userDoc.generateJWTAcessToken(clientID);
 
@@ -29,7 +29,7 @@ export const login = async (req: Request, res: Response) => {
         message: 'success',
         data: {
             accessToken: accessToken,
-            id: userDoc.userID,
+            id: userDoc._id,
             name: userDoc.firstName+" "+userDoc.lastName,
             email: userDoc.email,
             avatar: userDoc.avatar

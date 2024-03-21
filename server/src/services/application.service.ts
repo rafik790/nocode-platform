@@ -1,16 +1,15 @@
 import Application, { IApp } from "../models/appModel";
-import { v4 as uuidv4 } from "uuid";
+import { IUserDocument } from "../models/userModel";
 import { SYS_MESSAGE } from "../utils/constants";
 
-export const createApplication = async (payload: any, loggedUserID: string): Promise<any> => {
+export const createApplication = async (payload: any, loggedUser: any): Promise<any> => {
     const appObj: IApp = {
-        appID: uuidv4(),
         appName: payload.appName,
         appDesc: payload.appDesc,
         appDomain: payload.appDomain,
         isDeleted: false,
         deletedAt: null,
-        userID: loggedUserID
+        userID: loggedUser._id
     };
 
     const responseDto = {
@@ -21,16 +20,16 @@ export const createApplication = async (payload: any, loggedUserID: string): Pro
         },
     };
 
-    const appDoc = await Application.findOne({ appDomain: appObj.appDomain });
+    let appDoc = await Application.findOne({ appDomain: appObj.appDomain });
     if (!appDoc) {
-        await Application.create(appObj);
+        appDoc = await Application.create(appObj);
         responseDto.status = SYS_MESSAGE.SUCCESS.CODE;
         responseDto.message = "Application created sucessfully";
-        responseDto.data.appID = appObj.appID;
+        responseDto.data.appID = appDoc._id.toString();
     } else {
         responseDto.status = SYS_MESSAGE.BAD_REQUEST.CODE;
         responseDto.message = "Application can't be create as domain is already exist";
-        responseDto.data.appID = appObj.appID;
+        responseDto.data.appID = appDoc._id.toString();
     }
     return responseDto;
 }

@@ -1,6 +1,4 @@
-import { type ObjectId, Schema, model } from 'mongoose';
-//import type { FormElementsType } from '@form-builder/validation/types';
-
+import { type ObjectId, Schema, model, Types } from 'mongoose';
 
 interface IContentModelField {
   fieldID: string;
@@ -8,16 +6,16 @@ interface IContentModelField {
   fieldType: string;
   isUniqueField: boolean;
   isRequiredField: boolean;
+  isEntityField: boolean;
 }
 
 interface IContentModel {
-  modelID: string;
   modelName: string;
   lowerCaseName: string;
   fields: IContentModelField[];
   isActive: boolean;
-  userID: string;
-  appID: string;
+  userID: Types.ObjectId;
+  appID: Types.ObjectId;
 }
 
 const modelFieldsSchema = new Schema<IContentModelField>({
@@ -32,16 +30,16 @@ const modelFieldsSchema = new Schema<IContentModelField>({
   },
   isRequiredField: {
     type: Boolean
+  },
+  isEntityField: {
+    type: Boolean
   }
 }, { _id: false });
 
-const contentModelSchema = new Schema<IContentModel>(
+export interface IContentModelDocument extends IContentModel, Document {
+}
+const contentModelSchema = new Schema<IContentModelDocument>(
   {
-    modelID: {
-      type: String,
-      required: true,
-      unique: true
-    },
     modelName: {
       type: String,
       required: true,
@@ -51,9 +49,9 @@ const contentModelSchema = new Schema<IContentModel>(
       required: true
     },
     appID: {
-      type: String,
-      required: true,
-      default: null
+      type: Schema.Types.ObjectId,
+      ref: 'Application',
+      required: true
     },
     fields: [modelFieldsSchema],
     isActive: {
@@ -61,13 +59,14 @@ const contentModelSchema = new Schema<IContentModel>(
       default: true,
     },
     userID: {
-      type: String,
-      required: true,
-    },
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    }
   },
   {
     timestamps: true,
   },
 );
 
-export default model<IContentModel>('ContentModel', contentModelSchema);
+export default model<IContentModelDocument>('ContentModel', contentModelSchema);

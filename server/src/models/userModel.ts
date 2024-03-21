@@ -1,10 +1,9 @@
-import { type Query, Schema, model } from 'mongoose';
+import { type Query, Schema, model, Model, Types } from 'mongoose';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 
 export interface IUser {
-  userID: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -18,69 +17,57 @@ export interface IUser {
   deletedAt: Date | null;
 }
 
-const userSchema = new Schema<IUserDocument>(
-  {
-    userID: {
-      type: String,
-      required: true,
-      unique: true
-    },
-    firstName: {
-      type: String,
-      required: true,
-    },
-    lastName: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-      lowercase: true,
-    },
-    avatar: {
-      type: String,
-      default: null,
-    },
-    password: {
-      type: String,
-      required: true,
-      minLength: 8
-    },
-    passwordChangedAt: Date,
-    refreshToken: [String],
-    passwordResetToken: String,
-    passwordResetExpires: Date,
-    isDeleted: {
-      type: Boolean,
-      default: false,
-      select: false,
-    },
-    deletedAt: {
-      type: Date,
-      default: null,
-      select: false,
-    },
-  },
-  { timestamps: true },
-);
-
 export interface IUserDocument extends IUser, Document {
   generateJWTAcessToken(clientID: string): string;
 }
 
-userSchema.pre(/^find/, function (this: Query<IUser | IUser[], IUser>, next) {
-  this.where({ isDeleted: false });
-  next();
-});
+const userSchema = new Schema<IUserDocument>({
+  firstName: {
+    type: String,
+    required: true,
+  },
+  lastName: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+  },
+  avatar: {
+    type: String,
+    default: null,
+  },
+  password: {
+    type: String,
+    required: true,
+    minLength: 8
+  },
+  passwordChangedAt: Date,
+  refreshToken: [String],
+  passwordResetToken: String,
+  passwordResetExpires: Date,
+  isDeleted: {
+    type: Boolean,
+    default: false,
+    select: false,
+  },
+  deletedAt: {
+    type: Date,
+    default: null,
+    select: false,
+  },
+},
+  { timestamps: true },
+);
 
-
-userSchema.methods.generateJWTAcessToken = function (this: IUser, clientID: string) {
+userSchema.methods.generateJWTAcessToken = function (clientID: string): string {
   const expiresInMunites = 120;
   let payload = {
     clientID: clientID,
-    userID: this.userID,
+    userID: this._id,
     email: this.email,
     firstName: this.firstName,
     lastName: this.lastName,
